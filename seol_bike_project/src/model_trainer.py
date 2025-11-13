@@ -14,7 +14,7 @@ class ModelTrainer:
     """
     def __init__(self, experiment_name: str = "Seoul_Bike_Prediction_Ridge"):
         """Inicializa y configura el experimento de MLflow."""
-        # Initializing MLFlow Server
+        # Initializing MLFlow Serverç
         mlflow.set_tracking_uri("http://127.0.0.1:5000")
         os.environ["MLFLOW_TRACKING_URI"] = "file://" + os.path.abspath("mlruns")
         #mlflow.set_tracking_uri("file://" + os.path.abspath("mlruns"))
@@ -63,6 +63,10 @@ class ModelTrainer:
             with open(scaler_path, 'wb') as f:
                 pickle.dump(scaler, f)
             mlflow.log_artifact(scaler_path)
+
+            
+            # Obtener Run ID para trazabilidad
+            mlflow.set_tag("mlflow.runName", f"Ridge_alpha_{alpha}")
             
             # 6. Visualizar Resultados (simulación, ya que el log lo hace MLflow)
             print("\nResultados y modelo registrados en MLflow.")
