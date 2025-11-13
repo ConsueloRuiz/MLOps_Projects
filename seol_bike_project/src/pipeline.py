@@ -3,11 +3,13 @@ import os
 import mlflow
 from data_loader import DataLoader
 from model_trainer import ModelTrainer
+from data_processor import DataProcessor
 from mlflow.models import infer_signature
 
 
 # Nombre del archivo de datos subido por el usuario
 DATA_PATH = "data/raw/seoul_bike_sharing_modified.csv"
+PROCESSED_DATA_PATH = "data/processed/features.pkl"
 TARGET_COLUMN = 'rentedbikecount'
 ALPHAS = [0.1, 1.0, 10.0] # Diferentes parámetros para experimentar
 
@@ -25,6 +27,9 @@ def main():
         # 1. Carga y Preprocesamiento
         print("Carga y Preprocesamiento")
         data_loader = DataLoader(DATA_PATH)
+        # 1. Manipulación y Preparación de Datos (DataProcessor)
+        processor = DataProcessor(DATA_PATH, PROCESSED_DATA_PATH)
+        X, y, scaler = load_or_process_data(processor)
         # 2. Datos limpios
         print("Datos Limpios")
         df_cleaned = data_loader.load_and_clean_data()
