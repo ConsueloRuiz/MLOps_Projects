@@ -18,19 +18,19 @@ mlflow.set_tracking_uri("http://127.0.0.1:5000")
 os.environ["MLFLOW_TRACKING_URI"] = "file://" + os.path.abspath("mlruns")
 #mlflow.set_tracking_uri("file://" + os.path.abspath("mlruns"))
 
-    def load_or_process_data(processor: DataProcessor):
-        """Carga datos preprocesados si existen, si no, los procesa."""
-        if os.path.exists(PROCESSED_DATA_PATH):
-            print("Cargando datos preprocesados existentes (trazabilidad DVC).")
-            with open(PROCESSED_DATA_PATH, 'rb') as f:
-                data = pickle.load(f)
-            return data['X_scaled'], data['y'], data['scaler']
-        else:
-            print("Ejecutando pipeline de preprocesamiento.")
-            df_cleaned = processor.explore_and_clean()
-            X, y, scaler = processor.preprocess(df_cleaned)
-            processor.save_processed_data(X, y, scaler)
-            return X, y, scaler
+def load_or_process_data(processor: DataProcessor):
+    """Carga datos preprocesados si existen, si no, los procesa."""
+    if os.path.exists(PROCESSED_DATA_PATH):
+        print("Cargando datos preprocesados existentes (trazabilidad DVC).")
+        with open(PROCESSED_DATA_PATH, 'rb') as f:
+            data = pickle.load(f)
+        return data['X_scaled'], data['y'], data['scaler']
+    else:
+        print("Ejecutando pipeline de preprocesamiento.")
+        df_cleaned = processor.explore_and_clean()
+        X, y, scaler = processor.preprocess(df_cleaned)
+        processor.save_processed_data(X, y, scaler)
+        return X, y, scaler
 
 
 def main():
@@ -45,6 +45,7 @@ def main():
         print("Carga y Preprocesamiento DataProcessor")
         processor = DataProcessor(DATA_PATH, PROCESSED_DATA_PATH)
         print("load_or_process_data")
+        print("se actualizo")
         X, y, scaler = load_or_process_data(processor)
         # 2. Datos limpios
         print("Datos Limpios")
