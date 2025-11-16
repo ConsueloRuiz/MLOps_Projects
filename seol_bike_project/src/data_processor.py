@@ -13,12 +13,17 @@ class DataProcessor:
     def __init__(self, raw_path: str, processed_path: str):
         self.raw_path = raw_path
         self.processed_path = processed_path
+<<<<<<< HEAD
         self.target_col = 'rentedbikecount'
+=======
+        self.target_col = 'rented_bike_count'
+>>>>>>> 3cb215f2e561860f8b6f1d3bcbd458c434dd991e
         self.feature_cols = [
             'hour', 'temperaturec', 'humidity', 'wind_speed_ms', 
             'visibility_10m', 'dew_point_temperaturec', 
             'solar_radiation_mjm2', 'rainfallmm', 'snowfallcm', 'mixed_type_col'
         ]
+<<<<<<< HEAD
     def explore_and_clean(self) -> pd.DataFrame:
         """Carga, explora y realiza limpieza inicial."""
         print(f"Cargando datos desde: {self.raw_path}")
@@ -26,6 +31,9 @@ class DataProcessor:
         #df = self._clean_column_names(df)
     
         return df
+=======
+
+>>>>>>> 3cb215f2e561860f8b6f1d3bcbd458c434dd991e
 
     def save_processed_data(self, X_scaled: np.ndarray, y: np.ndarray, scaler: StandardScaler):
         """Guarda los datos procesados y el scaler para su versionado (DVC)."""
