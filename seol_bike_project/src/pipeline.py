@@ -3,15 +3,16 @@ import os
 import mlflow
 from data_loader import DataLoader
 from model_trainer import ModelTrainer
-from data_processor import DataProcessor
 from mlflow.models import infer_signature
 from sklearn.model_selection import train_test_split
+import json
 import pickle
 
 
 # Nombre del archivo de datos subido por el usuario
 DATA_PATH = "data/raw/seoul_bike_sharing_modified.csv"
 PROCESSED_DATA_PATH = "data/processed/features.pkl"
+METRICS_DATA_PATH = "data/processed/metrics.json"
 TARGET_COLUMN = 'rentedbikecount'
 
 #ALPHAS = [0.1, 1.0, 10.0] # Diferentes parámetros para experimentar
@@ -30,25 +31,19 @@ BASELINE_DATA_PATH = "data/processed/test_data_baseline.pkl"
 # Initializing MLFlow Server
 mlflow.set_tracking_uri("http://127.0.0.1:5000")
 os.environ["MLFLOW_TRACKING_URI"] = "file://" + os.path.abspath("mlruns")
-<<<<<<< HEAD
-=======
-#mlflow.set_tracking_uri("file://" + os.path.abspath("mlruns"))
 
-def load_or_process_data(processor: DataProcessor):
-    """Carga datos preprocesados si existen, si no, los procesa."""
-    if os.path.exists(PROCESSED_DATA_PATH):
-        print("Cargando datos preprocesados existentes (trazabilidad DVC).")
-        with open(PROCESSED_DATA_PATH, 'rb') as f:
-            data = pickle.load(f)
-        return data['X_scaled'], data['y'], data['scaler']
-    else:
-        print("Ejecutando pipeline de preprocesamiento.")
-        df_cleaned = processor.explore_and_clean()
-        X, y, scaler = processor.preprocess(df_cleaned)
-        processor.save_processed_data(X, y, scaler)
-        return X, y, scaler
+def save_dvc_metrics(best_rmse: float, path: str = 'metrics.json'):
+    """Guarda las métricas principales en un archivo JSON para el tracking de DVC."""
+    metrics = {
+        "metrics": [
+            {"rmse": best_rmse}
+            
+        ]
+    }
+    with open(path, 'w') as f:
+        json.dump(metrics, f, indent=4)
+    print(f"Métricas guardadas para DVC en: {path}")
 
->>>>>>> 3cb215f2e561860f8b6f1d3bcbd458c434dd991e
 
 def main():
     """
@@ -57,17 +52,7 @@ def main():
     try:
         # 1. Carga y Preprocesamiento
         print("Carga y Preprocesamiento")
-<<<<<<< HEAD
         data_loader = DataLoader(raw_data_path=DATA_PATH,processed_path=PROCESSED_DATA_PATH)
-=======
-        data_loader = DataLoader(DATA_PATH)
-        # 1. Manipulación y Preparación de Datos (DataProcessor)
-        print("Carga y Preprocesamiento DataProcessor")
-        processor = DataProcessor(DATA_PATH, PROCESSED_DATA_PATH)
-        print("load_or_process_data")
-        print("se actualizo")
-        X, y, scaler = load_or_process_data(processor)
->>>>>>> 3cb215f2e561860f8b6f1d3bcbd458c434dd991e
         # 2. Datos limpios
         print("Datos Limpios")
         df_cleaned = data_loader.load_and_clean_data()
@@ -124,12 +109,13 @@ def main():
         print("\nPipeline de ML completado exitosamente.")
         print("Para ver resultados y comparar métricas, ejecuta 'mlflow ui'.")
         print("Para versionar datos procesados, ejecuta 'dvc add data/processed/features.pkl'.")
-<<<<<<< HEAD
 
     # --- PASO DE SIMULACIÓN DE PROMOCIÓN DE ARTEFACTOS ---
         if best_model:
             print(f"\n✨ Promoviendo '{best_run_name}' (RMSE: {best_rmse:.2f}) a Producción...")
             
+            save_dvc_metrics(best_rmse)
+
             # a) Guardar el Modelo de Producción
             with open(PROD_MODEL_PATH, 'wb') as f:
                 pickle.dump(best_model, f)
@@ -151,12 +137,9 @@ def main():
                 
             print("Archivos de Serving y Drift generados exitosamente.")
 
-=======
->>>>>>> 3cb215f2e561860f8b6f1d3bcbd458c434dd991e
     
     except FileNotFoundError as e:
         print(f"ERROR: Asegúrate de colocar el archivo CSV en la ruta: {DATA_PATH}")
-        print(e)
     except Exception as e:
         print(f"Ocurrió un error inesperado: {e}")
 

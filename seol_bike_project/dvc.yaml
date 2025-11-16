@@ -1,0 +1,9 @@
+stages:
+  train_model:
+    cmd: python src/pipeline.py --stage_train
+    deps:
+    - data/processed/features.pkl
+    - src/model_trainer.py
+    metrics:
+    - metrics.json:
+        cache: false

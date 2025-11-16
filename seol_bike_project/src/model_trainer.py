@@ -65,14 +65,8 @@ class ModelTrainer:
                 pickle.dump(scaler, f)
             mlflow.log_artifact(scaler_path)
 
-<<<<<<< HEAD
             print(f"Datos preprocesados y scaler guardados en: {scaler_path}")
 
-=======
-            
-            # Obtener Run ID para trazabilidad
-            mlflow.set_tag("mlflow.runName", f"Ridge_alpha_{alpha}")
->>>>>>> 3cb215f2e561860f8b6f1d3bcbd458c434dd991e
             
             # 6. Visualizar Resultados (simulación, ya que el log lo hace MLflow)
             print("\nResultados y modelo registrados en MLflow.")

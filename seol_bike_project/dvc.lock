@@ -1,0 +1,18 @@
+schema: '2.0'
+stages:
+  train_model:
+    cmd: python src/pipeline.py --stage_train
+    deps:
+    - path: data/processed/features.pkl
+      hash: md5
+      md5: 262cf304f4ded6d7032e5d627fdfa4d4
+      size: 449496
+    - path: src/model_trainer.py
+      hash: md5
+      md5: 5613e297a5197100600a2f7be498909c
+      size: 3030
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: 3fad7e134690b65d1d0f85142403d0d1
+      size: 90

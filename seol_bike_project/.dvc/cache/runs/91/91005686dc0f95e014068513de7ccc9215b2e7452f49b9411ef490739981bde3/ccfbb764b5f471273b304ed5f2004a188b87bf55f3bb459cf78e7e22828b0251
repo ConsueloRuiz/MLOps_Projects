@@ -1,0 +1,15 @@
+cmd: python src/pipeline.py --stage_train
+deps:
+- path: data/processed/features.pkl
+  hash: md5
+  md5: 262cf304f4ded6d7032e5d627fdfa4d4
+  size: 449496
+- path: src/model_trainer.py
+  hash: md5
+  md5: 5613e297a5197100600a2f7be498909c
+  size: 3030
+outs:
+- path: data/processed/metrics.json
+  hash: md5
+  md5: d41d8cd98f00b204e9800998ecf8427e
+  size: 0
