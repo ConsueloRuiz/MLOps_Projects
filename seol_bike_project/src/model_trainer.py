@@ -8,6 +8,7 @@ import pickle # Para guardar el scaler
 from sklearn.preprocessing import StandardScaler
 import os
 
+
 class ModelTrainer:
     """
     Clase para el entrenamiento, evaluación y logging con MLflow.
@@ -63,6 +64,10 @@ class ModelTrainer:
             with open(scaler_path, 'wb') as f:
                 pickle.dump(scaler, f)
             mlflow.log_artifact(scaler_path)
+
+            print(f"Datos preprocesados y scaler guardados en: {scaler_path}")
+
             
             # 6. Visualizar Resultados (simulación, ya que el log lo hace MLflow)
             print("\nResultados y modelo registrados en MLflow.")
+            return model, rmse

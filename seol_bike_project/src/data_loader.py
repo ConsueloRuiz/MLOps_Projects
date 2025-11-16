@@ -2,6 +2,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+import pickle
 import numpy as np
 
 class DataLoader:
@@ -9,27 +10,30 @@ class DataLoader:
     Clase para manejar la carga y preprocesamiento de los datos de bicicletas.
     Aplica POO para encapsular la lógica de datos.
     """
-    def __init__(self, raw_data_path: str):
+    def __init__(self, raw_data_path: str,processed_path: str):
         """Inicializa con la ruta del archivo de datos brutos."""
         self.raw_data_path = raw_data_path
-
+        self.processed_path = processed_path
+        self.target_col = 'rentedbikecount'
+        self.feature_cols = [
+            'hour', 'temperaturec', 'humidity', 'wind_speed_ms', 
+            'visibility_10m', 'dew_point_temperaturec', 
+            'solar_radiation_mjm2', 'rainfallmm', 'snowfallcm', 'mixed_type_col'
+        ]
 
 
     def load_and_clean_data(self) -> pd.DataFrame:
         """Carga los datos brutos y realiza la limpieza básica."""
         print("Cargando y limpiando datos...")
-        #print(self.raw_data_path)
+        print(self.raw_data_path)
         try:
             df = pd.read_csv(self.raw_data_path, encoding='latin-1', na_values=[' '])
         
         except Exception as e:
             raise FileNotFoundError(f"Error al cargar el archivo: {e}")
- 
+
         # Refactorización: Limpieza y Estandarización de Nombres de Columnas
         df.columns = df.columns.str.replace('[^A-Za-z0-9_]+', '', regex=True).str.lower().str.replace(' ', '_')
-
-        # Refactorización: Manejo de valores no numéricos y nulos
-        #df['mixed_type_col'] = pd.to_numeric(df['mixed_type_col'], errors='coerce')
 
         # Eliminar filas con nulos después de la limpieza
         #df = df.dropna()
@@ -38,7 +42,6 @@ class DataLoader:
         var_float = ['temperaturec', 'windspeedms', 'dewpointtemperaturec', 'solarradiationmjm2',
                     'rainfallmm', 'snowfallcm']
 
-
     # Convertir a Fecha
         df['date'] = df['date'].str.strip()
         df['date'] = pd.to_datetime(df['date'], errors='coerce', dayfirst=True)
@@ -46,7 +49,7 @@ class DataLoader:
         # Convertir a numerico
         for col in var_int:
             df[col] = pd.to_numeric(df[col], errors= 'coerce', downcast='integer')
-            
+
         # Convertir a float
         for col in var_float:
             df[col] = pd.to_numeric(df[col], errors= 'coerce')
@@ -56,7 +59,7 @@ class DataLoader:
 
         # Se elimina la columna 'mixed_type_col' por no aportar data importante y tener gran cantidad de nulls
         df.drop(columns = ['mixed_type_col'], inplace = True)
-       
+
         # Eliminamos los registros nulos de la variable objetivo, asi como los datos con fecha nula.
         # IMPORTANTE: Recordad que el porcentaje de valores faltantes es poco, entonces se toma la decision de elimnar los registros.
 
@@ -151,6 +154,20 @@ class DataLoader:
         # Estandarización de características
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
+
+        data_to_save = {
+            'X_scaled': X_scaled,
+            'y': y,
+            'scaler': scaler
+        }
+        with open(self.processed_path, 'wb') as f:
+            pickle.dump(data_to_save, f)
+        
+        print(f"Datos preprocesados y scaler guardados en: {self.processed_path}")
+        # En la terminal, este paso se seguiría con:
+        # dvc add data/processed/features.pkl
+        # dvc commit -m "Datos procesados con limpieza vX.X"
+
 
         # División en conjuntos de entrenamiento y prueba
         X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
