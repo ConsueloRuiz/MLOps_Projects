@@ -33,6 +33,7 @@ class DataLoader:
         except Exception as e:
             raise FileNotFoundError(f"Error al cargar el archivo: {e}")
 
+        # Inicia el proceso de Refactorizacion
         # Refactorización: Limpieza y Estandarización de Nombres de Columnas
         df.columns = df.columns.str.replace('[^A-Za-z0-9_]+', '', regex=True).str.lower().str.replace(' ', '_')
 
