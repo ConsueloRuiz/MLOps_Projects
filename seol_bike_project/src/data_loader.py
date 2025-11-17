@@ -8,8 +8,9 @@ import os
 
 class DataLoader:
     """
-    Clase para manejar la carga y preprocesamiento de los datos de bicicletas.
-    Aplica POO para encapsular la lógica de datos.
+    Clase responsable de la carga, validación y preprocesamiento del dataset de bicicletas.
+Implementa principios de Programación Orientada a Objetos (POO) para encapsular toda la lógica 
+relacionada con la gestión de datos, garantizando modularidad, reutilización y mantenibilidad del código.
     """
     def __init__(self, raw_data_path: str,processed_path: str):
         """Inicializa con la ruta del archivo de datos brutos."""
@@ -24,7 +25,8 @@ class DataLoader:
 
 
     def load_and_clean_data(self) -> pd.DataFrame:
-        """Carga los datos brutos y realiza la limpieza básica."""
+        """Carga el dataset en su forma original (datos brutos) y aplica las primeras etapas de limpieza,
+incluyendo corrección de valores faltantes, estandarización de formatos y eliminación de inconsistencias básicas."""
         print("Cargando y limpiando datos...")
         print(self.raw_data_path)
         try:
@@ -37,14 +39,14 @@ class DataLoader:
         # Refactorización: Limpieza y Estandarización de Nombres de Columnas
         df.columns = df.columns.str.replace('[^A-Za-z0-9_]+', '', regex=True).str.lower().str.replace(' ', '_')
 
-        # Eliminar filas con nulos después de la limpieza
-        #df = df.dropna()
-        # 1. Limpieza y preparación (ej. imputación simple y one-hot encoding)
+        # Eliminar las filas que aun contienen valores nulos después de aplicar las etapas de  limpieza, garantizando que el dataset final sea consistente y apto para el modelado.
+        df = df.dropna()
+        # Define las variables numéricas del dataset separándolas en enteras (var_int) y flotantes (var_float) para facilitar su preprocesamiento.
         var_int = ['rentedbikecount','hour','humidity','visibility10m']
         var_float = ['temperaturec', 'windspeedms', 'dewpointtemperaturec', 'solarradiationmjm2',
                     'rainfallmm', 'snowfallcm']
 
-    # Convertir a Fecha
+    # Limpia espacios en la columna 'date' y convierte sus valores a formato datetime, manejando errores automáticamente.
         df['date'] = df['date'].str.strip()
         df['date'] = pd.to_datetime(df['date'], errors='coerce', dayfirst=True)
 
