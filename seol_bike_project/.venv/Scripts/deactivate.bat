@@ -1,5 +1,6 @@
 @echo off
-
+:: Este script restaura las variables de entorno originales al desactivar un entorno virtual de Python,
+:: incluyendo PROMPT, PYTHONHOME y PATH, y limpia las variables temporales usadas por el entorno.
 if defined _OLD_VIRTUAL_PROMPT (
     set "PROMPT=%_OLD_VIRTUAL_PROMPT%"
 )
