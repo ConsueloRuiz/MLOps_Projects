@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 import pickle
 import numpy as np
 
+# Class DataProcessor
 class DataProcessor:
     """
     Clase que encapsula la manipulación, limpieza y preprocesamiento de datos.
