@@ -21,6 +21,7 @@ class BikeFeatures(BaseModel):
     seasons_Spring: Optional[int] = Field(0, description="Dummy para Primavera (1 si es Primavera, 0 sino)")
     seasons_Autumn: Optional[int] = Field(0, description="Dummy para Otoño (1 si es Otoño, 0 sino)")
     
+    # Class Condfig
     class Config:
         schema_extra = {
             "example": {
@@ -31,7 +32,7 @@ class BikeFeatures(BaseModel):
                 "seasons_Spring": 1 
             }
         }
-
+# Class PredictionResponse
 class PredictionResponse(BaseModel):
     prediction: float = Field(..., description="Número predicho de bicicletas alquiladas")
     model_version: str = Field(..., description="Versión del modelo usado para la predicción")
