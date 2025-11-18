@@ -8,11 +8,13 @@ import pickle # Para guardar el scaler
 from sklearn.preprocessing import StandardScaler
 import os
 
-
+# Clase de entrenamiento
 class ModelTrainer:
     """
     Clase para el entrenamiento, evaluación y logging con MLflow.
     """
+
+    #Funcion inicializacion
     def __init__(self, experiment_name: str = "Seoul_Bike_Prediction_Ridge"):
         """Inicializa y configura el experimento de MLflow."""
         # Initializing MLFlow Serverç
@@ -23,7 +25,7 @@ class ModelTrainer:
         mlflow.set_experiment(self.experiment_name)
         print(f"MLflow Experimento: {self.experiment_name} iniciado.")
 
-        
+    # Funcion de entrenamiento y log al modelo    
     def train_and_log_model(self, X_train, X_test, y_train, y_test, alpha: float, scaler: StandardScaler):
         """
         Entrena un modelo Ridge, registra métricas, parámetros y artefactos en MLflow.
