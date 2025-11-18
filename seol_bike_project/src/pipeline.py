@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 import json
 import pickle
 
-
+# Desarrollo del pipeline para mlflow
 # Nombre del archivo de datos subido por el usuario
 DATA_PATH = "data/raw/seoul_bike_sharing_modified.csv"
 PROCESSED_DATA_PATH = "data/processed/features.pkl"
